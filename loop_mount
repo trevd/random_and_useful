@@ -1,0 +1,23 @@
+#!/bin/sh
+HANDLED=
+function mount_loop()
+{
+        LOOP=`losetup -f`
+        IMAGE_FILE=$1
+        MNTPT=$2
+        mkdir -p $MNTPT
+        losetup $LOOP $IMAGE_FILE
+        mount $LOOP $MNTPT     
+        
+}
+function usage()
+{
+if [ -z "$*" ] ; then 
+   echo "Usage: lomount <image_file> <mount_point>"
+        
+fi
+}
+usage $*
+if [ ! -z "$HANDLED" ] ; then 
+        main $*
+fi

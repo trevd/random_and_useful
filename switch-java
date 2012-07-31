@@ -1,0 +1,31 @@
+#!/bin/bash
+# This script provides a wrapper for switch between JDK versions
+# It allows compilation of Donut and Froyo with Version5 
+# Gingerbread, Honeycomb and Ice Cream Sandwich are compiled with Version 6
+# If no version is specified then a list is presented
+
+# Root Check
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+JAVA_VER=$1
+
+	if [[ $JAVA_VER -eq 5 ]]; then
+		echo "Setting Java To Version 5"
+		update-alternatives --set javac /usr/lib/jvm/java-1.5.0-sun/bin/javac
+		update-alternatives --set java  /usr/lib/jvm/java-1.5.0-sun/jre/bin/java 
+		exit 0
+	fi
+
+	if [[ $JAVA_VER -eq 6 ]]; then
+		echo "Setting Java To Version 6"
+		update-alternatives --set java /usr/lib/jvm/java-6-sun/jre/bin/java
+		update-alternatives --set javac  /usr/lib/jvm/java-6-sun/bin/javac
+		exit 0
+	fi
+
+
+# No Version Chosen. Let the User Pick From A List
+	update-alternatives --config java
+	update-alternatives --config javac
