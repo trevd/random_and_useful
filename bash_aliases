@@ -1,5 +1,13 @@
 
+function lsdirectory(){
 
+	if [ $# -eq 0] ; then 
+		DIR=./
+	else
+		DIR=$1
+	fi
+	find $DIR -type d  -maxdepth 1
+}
 
 function alt-up(){
 	sudo update-alternatives --config $1
@@ -11,7 +19,7 @@ function gh-clone(){
 	git clone git@github.com:trevd/$1.git $2
 }
 function quick-find(){	
-		find ./ -iname "*$1*" 
+	find ./ -iname "*$1*" 
 }
 function movefromlast(){
 	mv $OLDPWD/$1 $PWD
@@ -62,7 +70,9 @@ function fgreplowr(){
 	echo "fgrep -inR \"$1\" $SEARCH 2>/dev/null"
 	 	fgrep -inR "$1" $SEARCH 2>/dev/null
 }
-PATH=/media/android/lib:/media/android/bin:$PATH
+
+DARWIN_PREFIX=i686-apple-darwin11
+PATH=/media/android/lib:/media/android/bin:$PATH:/media/android/osx/i686-apple-darwin11/usr/bin
 ANDROID_DIR=/media/android/
 VENDOR_DIR=/media/vendor/
 BUILD_DIR=/media/android/build/
@@ -79,7 +89,8 @@ alias 755='sudo chmod 755'
 alias chm='sudo chmod'
 alias own='sudo -E chown $USER.$USER -Rv'
 alias ownrv='sudo -E chown $USER.$USER -Rv'
-
+alias goosxsdk108='cd /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk'
+alias goosx='cd $ANDROID_DIR/osx'
 alias exut=exit
 alias fr=fgreplowr
 alias f=fgreplow
@@ -107,6 +118,11 @@ alias ghwin='cd $ANDROID_BUILD_TOP/out/host/windows-x86'
 alias ghdar='cd $ANDROID_BUILD_TOP/out/host/darwin-x86'
 
 alias gbt='cd $ANDROID_BUILD_TOP'
+alias gadb='cd $ANDROID_BUILD_TOP/system/core/adb'
+alias gfb='cd $ANDROID_BUILD_TOP/system/core/fastboot'
+alias gzlib='cd $ANDROID_BUILD_TOP/external/zlib'
+alias gssl='cd $ANDROID_BUILD_TOP/external/openssl'
+alias gbit='cd $ANDROID_BUILD_TOP/external/bootimage_tools'
 alias gext='cd $ANDROID_BUILD_TOP/external'
 alias gsys='cd $ANDROID_BUILD_TOP/system'
 alias grecovery='cd $ANDROID_BUILD_TOP/bootable/recovery'
@@ -123,6 +139,7 @@ alias ghw='cd $ANDROID_BUILD_TOP/hardware'
 alias ghwti='cd $ANDROID_BUILD_TOP/hardware/ti'
 alias ghwril='cd $ANDROID_BUILD_TOP/hardware/ril'
 alias gti='cd $ANDROID_BUILD_TOP/device/ti'
+alias gtiblaze='cd $ANDROID_BUILD_TOP/device/ti/blaze_tablet'
 alias gsam='cd $ANDROID_BUILD_TOP/device/samsung'
 alias gven='cd $ANDROID_BUILD_TOP/vendor'
 alias ggog='cd $ANDROID_BUILD_TOP/device/google'
@@ -170,12 +187,15 @@ alias chown='sudo chown'
 alias chmod='sudo chmod'
 alias +x='sudo chmod +x'
 alias +w='sudo chmod +w'
+alias +r='sudo chmod +r'
 alias rmrf='sudo rm -rf'
 alias cprv='cp -rv'
 alias cd-='cd -'
 alias wgetf='wget -F'
-
-alias 7x='7z a'
+alias androidsdk='$SDK/tools/android &'
+ 
+alias 7d='7z d'
+alias 7a='7z a'
 alias 7x='7z x'
 alias 7l='7z l'
 alias 7u='7z u'
@@ -185,8 +205,9 @@ alias sug='sudo $EDITOR'
 
 
 alias settings='$EDITOR /media/android/setup/bash_aliases &'
-alias lar='ls -lAh'
+alias lar='ls -lAhR'
 
+alias lsdir='lsdirectory'
 alias la='ls -lAh'
 alias l1='ls -1'
 alias l1r='find . -iname '
