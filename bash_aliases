@@ -88,7 +88,7 @@ REPO_DIR=/media/android/REPO
 GITS=$REPO_DIR/gits
 KERNELS_DIR=$ALIAS_BUILD_DIR/kernels
 ANDROID_KERNELS_DIR=$KERNELS_DIR/android
-EDITOR=geany
+EDITOR='geany --socket-file `mktemp'
 NDK_TOOLCHAIN_VERSION=clang3.1
 
 APT=apt-fast
