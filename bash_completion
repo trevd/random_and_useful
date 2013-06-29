@@ -1,0 +1,30 @@
+#
+#  Completion for foo:
+#
+#  foo file [filename]
+#  foo hostname [hostname]
+#
+function _bootimage_utils() 
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="extract update create info"
+ 
+    case "${prev}" in
+        extract|update|create|info)
+            COMPREPLY=( $(compgen -f ${cur}) )
+            return 0
+            ;;
+        hostname)
+            COMPREPLY=( $(compgen -A hostname ${cur}) )
+            return 0
+            ;;
+        *)
+        ;;
+    esac
+
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+}
+#complete -F _bootimage_utils bootimage-utils
