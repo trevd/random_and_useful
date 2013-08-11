@@ -2,7 +2,7 @@
 #G_FILE=/run/shm/geany.$USER
 ALIAS_DOWNLOAD_DIR=/REPO/Downloads
 
-
+alias doset='source $HOME/.bash_aliases && $HOME/.bash_completion'
 shopt -s autocd
 rm $HOME/Downloads
 ln -s $ALIAS_DOWNLOAD_DIR $HOME/Downloads
@@ -14,7 +14,36 @@ if [ -f $TODIR ]; then
 fi
 alias todir='to_dir'
 
+alias llp='ls -l ../'
 
+
+
+# make directory ( including parents ) and cd to it
+function make_and_change_directory(){ 
+
+	mkdir -pv $1
+	cd $1
+
+}
+alias mdcd='make_and_change_directory'
+
+# touch a file and make the path if required
+function make_directory_touch_file(){
+
+	mkdir -pv $( dirname $1 ) && touch $1 && ls -l $1
+	
+
+}
+alias mktouch='make_directory_touch_file'
+
+# touch a file, make the path if required and edit 
+function make_directory_touch_file(){
+
+	mkdir -pv $( dirname $1 ) && $EDITOR $1 && ls -l $1
+	
+
+}
+alias mktouched='make_directory_touch_file'
 function cleanobj(){
      for fi in  `qf *.o `; do  rm -v $fi ; done
 }
@@ -22,18 +51,18 @@ function installtoolchain(){
     
     GCC=$1
     GPP=$(echo $GCC |sed 's/gcc/g++/g')
-    sudo apt-get -y install $GCC $GPP
+    sudo apt-get -y --force-yes install $GCC $GPP
     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/$GCC 20 --slave /usr/bin/g++ g++ /usr/bin/$GPP
     sudo update-alternatives --config gcc
 }
 
-function touchngo(){
+#function touchngo(){
 
 	
 #	while [ cou -eq $1 ]
 
 
-}
+#}
 
 function mvdown(){
 
@@ -139,8 +168,24 @@ function doenvsetup(){
         source build2/envsetup.sh
     else
         source build/envsetup.sh 
-    fid
-    
+    fi
+}
+function addalias(){
+
+	if [ $# -eq 0 ] ; then
+	    echo "No arguments supplied"
+            return ;
+	fi
+
+	if [ $# -eq 1 ] ; then
+		echo "usage: addalias <alias> '<command>'"
+		return ;
+	fi
+
+	echo "alias $1='$2'" >> $HOME/.bash_aliases
+	doset
+
+
 }
 function elfless(){
     readelf -a $1 | less
@@ -205,7 +250,7 @@ REPO_DIR=/REPO
 GITS=$REPO_DIR/gits
 KERNELS_DIR=$ALIAS_BUILD_DIR/kernels
 ANDROID_KERNELS_DIR=$KERNELS_DIR/android
-EDITOR=leafpad
+EDITOR=gedit
 # --socket-file $G_FILE"
 NDK_TOOLCHAIN_VERSION=clang3.1
 export USE_CCACHE=1
@@ -327,7 +372,11 @@ alias gtiblaze='cd $ANDROID_BUILD_TOP/device/ti/blaze_tablet'
 alias gsam='cd $ANDROID_BUILD_TOP/device/samsung'
 alias ghtc='cd $ANDROID_BUILD_TOP/device/htc'
 alias gbionic='cd $ANDROID_BUILD_TOP/bionic'
+alias gprebuilts='cd $ANDROID_BUILD_TOP/prebuilts'
 alias glibc='cd $ANDROID_BUILD_TOP/bionic/libc'
+alias gktools='cd $ANDROID_BUILD_TOP/bionic/libc/kernel/tools'
+alias gkheader='cd $ANDROID_BUILD_TOP/external/kernel-headers/original'
+alias gkintel='cd $ANDROID_BUILD_TOP/kernel/intel'
 alias gven='cd $ANDROID_BUILD_TOP/vendor'
 alias ggog='cd $ANDROID_BUILD_TOP/device/google'
 alias gcom='cd $ANDROID_BUILD_TOP/device/common'
@@ -353,7 +402,11 @@ alias gkerconfig='$EDITOR $ALIAS_KERNEL_DIR/arch/$(get_build_var TARGET_ARCH)/co
 
 alias gpl='cd $ALIAS_BUILD_DIR/android-paranoid && doenvsetup && lunch'  
 alias gal='reset_paths && cd $ALIAS_BUILD_DIR/aosp && doenvsetup && lunch'
-
+alias gul='reset_paths && cd $ALIAS_BUILD_DIR/android-aurora && doenvsetup && lunch'
+alias gil='reset_paths && cd $ALIAS_BUILD_DIR/android-intel && doenvsetup && lunch'
+alias g6l='reset_paths && cd $ALIAS_BUILD_DIR/android-armv6 && doenvsetup && lunch'
+alias reposynclite='repo sync -j16 --no-tags --no-clone-bundle --current-branch'
+alias reposynclitetrace='repo --trace sync -j16 --no-tags --no-clone-bundle --current-branch'
 
 function g1l(){
     echo "ROM $1"
@@ -363,12 +416,21 @@ function g1l(){
         echo "ROM $ROM"
     fi
 	reset_paths
+
     cd $ALIAS_BUILD_DIR/android-cm-10 && doenvsetup && lunch $ROM
+
+	if [ -z "$ANDROID_BUILD_TOP" ] ; then
+		export ANDROID_BUILD_TOP=$ALIAS_BUILD_DIR/android-cm-10
+	fi
+
 }
 
 function g8l(){
 	reset_paths
     cd $ALIAS_BUILD_DIR/android-x86 && doenvsetup && lunch $ROM
+	if [ -z "$ANDROID_BUILD_TOP" ] ; then
+		export ANDROID_BUILD_TOP=$ALIAS_BUILD_DIR/android-x86
+	fi
 
 }
 function reset_paths(){
@@ -516,7 +578,7 @@ alias udev-android='sug /etc/udev/rules.d/51-android.rules'
 alias udev-reload='sudo udevadm control --reload-rules'
 alias adbg='ADB_TRACE=all a'
 alias lns='ln -s'
-alias doset='source $HOME/.bash_aliases && $HOME/.bash_completion'
+
 alias updaterscript='$EDITOR META-INF/com/google/android/updater-script'
 alias ghome='cd $HOME'
 alias diffy='diff -W130 --suppress-common-lines  -y'
@@ -561,4 +623,28 @@ alias fgrep='echo Did you mean ag!!! && ag'
 alias fif='ag'
 
 alias gbsd='cd $ALIAS_BUILD_DIR/freebsd'
+
+alias gasm='cd $ALIAS_BUILD_DIR/asm'
+
+alias dasm='objdump --disassemble'
+alias gsyscorelibcutils='cd $ANDROID_BUILD_TOP/system/core/libcutils'
+alias gsyscoreliblog='cd $ANDROID_BUILD_TOP/system/core/liblog'
+alias goamd64='cd $ALIAS_BUILD_DIR/amd64'
+alias golibc='reset_paths && $ALIAS_BUILD_DIR/olibc && doenvsetup && lunch'
+alias gacp='cd $ANDROID_BUILD_TOP/build/tools/acp'
+alias gbuildhost='cd $ANDROID_BUILD_TOP/build/libs/host'
+alias gstdc='cd $ALIAS_BUILD_DIR/std-c-libs'
+alias README='less README'
+alias INSTALL='less INSTALL'
+alias conf='./configure'
+alias gbionic='cd $ANDROID_BUILD_TOP/bionic'
+alias gbioniclc='cd $ANDROID_BUILD_TOP/bionic/libc'
+alias gbioniclcarch='cd $ANDROID_BUILD_TOP/bionic/libc/arch-$TARGET_ARCH'
+alias gbioniclck='cd $ANDROID_BUILD_TOP/bionic/libc/kernel/'
+alias gbioniclcktools='cd $ANDROID_BUILD_TOP/bionic/libc/kernel/tools'
+alias gbionicdl='cd $ANDROID_BUILD_TOP/bionic/libdl'
+alias groomservice='$EDITOR $ANDROID_BUILD_TOP/.repo/local_manifests/roomservice.xml'
+alias rmroomservice='rm $ANDROID_BUILD_TOP/.repo/local_manifests/roomservice.xml'
+alias gmanifest='$EDITOR $ANDROID_BUILD_TOP/.repo/manifest.xml'
+alias mkdir='mkdir -pv'
 
