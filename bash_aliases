@@ -1,11 +1,12 @@
 #G_FILE=/run/shm/geany.$USER
 #G_FILE=/run/shm/geany.$USER
 ALIAS_DOWNLOAD_DIR=/REPO/Downloads
+ALIAS_MUSIC_DIR=/REPO/music
 
 alias doset='source $HOME/.bash_aliases && $HOME/.bash_completion'
 shopt -s autocd
-rm $HOME/Downloads
-ln -s $ALIAS_DOWNLOAD_DIR $HOME/Downloads
+ln -fs $ALIAS_DOWNLOAD_DIR $HOME/Downloads
+ln -fs $ALIAS_MUSIC_DIR $HOME/Music
 export TODIR=/android/build/random_and_useful/todir
 
 
@@ -37,13 +38,13 @@ function make_directory_touch_file(){
 alias mktouch='make_directory_touch_file'
 
 # touch a file, make the path if required and edit 
-function make_directory_touch_file(){
+function make_directory_touch_file_edit(){
 
 	mkdir -pv $( dirname $1 ) && $EDITOR $1 && ls -l $1
 	
 
 }
-alias mktouched='make_directory_touch_file'
+alias mktouched='make_directory_touch_file_edit'
 function cleanobj(){
      for fi in  `qf *.o `; do  rm -v $fi ; done
 }
@@ -73,6 +74,31 @@ function mvdown(){
     mv ~/Downloads/$1 $DEST
 
 }
+
+# mvcd - mv a file and then change directory to the new
+# location
+function mvcd(){
+
+    DEST=$2
+    DESTDIR=$( basename $2 )
+    SRCBASE=$( basename $1 )
+    if [ $DESTDIR != $SRCBASE ] ; then
+	    DESTDIR=$DEST
+    else
+        DESTDIR=$( dirname $2 )
+    fi
+
+
+    if [ -z "$2" ] ; then DEST="." ; fi
+
+    echo "$1"
+    mv $1 $DEST
+    cd $DESTDIR
+
+
+}
+
+
 hex2dec(){
   echo "ibase=16; $@"|bc
 }
@@ -143,6 +169,9 @@ function gh-clone(){
 function quick-find(){  
     find ./ -iname "*$1*" 
 }
+function quick-find-dir(){  
+    find $1 -iname "*$2" 
+}
 function movefromlast(){
     mv $OLDPWD/$1 $PWD
 }
@@ -188,7 +217,7 @@ function addalias(){
 
 }
 function elfless(){
-    readelf -a $1 | less
+    readelf -aW $1 | less
 }
 function binless(){
     strings $1 | less
@@ -240,7 +269,7 @@ function get_device(){
     ALIAS_DEVICE=$(echo "$TARGET_PRODUCT" | sed -ne 's/^[^_]*_//p')
 }
 
-PATH=/android/bin:/android/lib:$PATH
+
 ALIAS_ANDROID_DIR=/android
 VENDOR_DIR=/vendor/
 ALIAS_BUILD_DIR=/android/build
@@ -275,8 +304,10 @@ alias setjava='sudo update-alternatives --config java && sudo update-alternative
 alias addapp='sudo update-alternatives --install'
 ENVSETUP=doenvsetup
 export SDK=$ALIAS_ANDROID_DIR/sdk
+export ANDROID_SDK=$ALIAS_ANDROID_DIR/sdk
 export ANDROID_HOME=$SDK
 export NDK=/android/ndk/android-ndk-r8e
+PATH=/android/bin:/android/lib:$ANDROID_SDK/platform-tools:$ANDROID_SDK/tools:/android/build/toolchains/arm-linux-androideabi-4.7/bin:$PATH
 alias gh-commit='git commit -a && git push'
 alias gh-push='git push'
 alias c='cat'
@@ -285,9 +316,11 @@ alias gd='godir'
 #alias cd..='popd'
 alias du0='du -h --max-depth=0 -c'
 alias start-eclipse='$ALIAS_ANDROID_DIR/eclipse/eclipse &'
+alias llt='ls -l --sort=time'
 alias gpout='cd $ANDROID_PRODUCT_OUT'
 alias gpoutkernel='cd $ANDROID_PRODUCT_OUT/obj/KERNEL_OBJ'
 alias gpoutobj='cd $ANDROID_PRODUCT_OUT/obj'
+alias gpoutobjlib='cd $ANDROID_PRODUCT_OUT/obj/lib'
 alias gpoututils='cd $ANDROID_PRODUCT_OUT/utilities'
 alias gowinbin='cd $REPO_DIR/windows'
 alias goapk='cd $ALIAS_ANDROID_DIR/apk'
@@ -374,16 +407,30 @@ alias ghtc='cd $ANDROID_BUILD_TOP/device/htc'
 alias gbionic='cd $ANDROID_BUILD_TOP/bionic'
 alias gprebuilts='cd $ANDROID_BUILD_TOP/prebuilts'
 alias glibc='cd $ANDROID_BUILD_TOP/bionic/libc'
+alias glibc86='cd $ANDROID_BUILD_TOP/bionic/libc/arch-x86'
+alias glibc64='cd $ANDROID_BUILD_TOP/bionic/libc/arch-x86_64'
+alias glibc86bionic='cd $ANDROID_BUILD_TOP/bionic/libc/arch-x86/bionic'
+alias glibc64bionic='cd $ANDROID_BUILD_TOP/bionic/libc/arch-x86_64/bionic'
+alias llibc86='ll $ANDROID_BUILD_TOP/bionic/libc/arch-x86'
+alias llibc64='ll $ANDROID_BUILD_TOP/bionic/libc/arch-x86_64'
+alias llibc86bionic='ll $ANDROID_BUILD_TOP/bionic/libc/arch-x86/bionic'
+alias llibc64bionic='ll $ANDROID_BUILD_TOP/bionic/libc/arch-x86_64/bionic'
+
+
 alias gktools='cd $ANDROID_BUILD_TOP/bionic/libc/kernel/tools'
 alias gkheader='cd $ANDROID_BUILD_TOP/external/kernel-headers/original'
 alias gkintel='cd $ANDROID_BUILD_TOP/kernel/intel'
 alias gven='cd $ANDROID_BUILD_TOP/vendor'
+alias gprebuilt='cd $ANDROID_BUILD_TOP/prebuilt'
 alias ggog='cd $ANDROID_BUILD_TOP/device/google'
 alias gcom='cd $ANDROID_BUILD_TOP/device/common'
 alias ggen='cd $ANDROID_BUILD_TOP/device/generic'
 alias gasus='cd $ANDROID_BUILD_TOP/device/asus'
 alias gmakefile='$EDITOR $ANDROID_BUILD_TOP/build/core/Makefile'
 alias gfw='cd $ANDROID_BUILD_TOP/frameworks'
+alias gdalvik='cd $ANDROID_BUILD_TOP/dalvik'
+alias gdalvikvm='cd $ANDROID_BUILD_TOP/dalvik/vm'
+alias gdalvikvmnative='cd $ANDROID_BUILD_TOP/dalvik/vm/native'
 alias gdevicegrouper='cd $ANDROID_BUILD_TOP/device/asus/grouper'
 alias grepo='cd $ANDROID_BUILD_TOP/.repo'
 alias gpackages='cd $ANDROID_BUILD_TOP/packages'
@@ -510,6 +557,7 @@ alias 666='sudo chmod 666'
 alias 750='sudo chmod 750'
 alias rmrf='sudo rm -rf'
 alias cprv='cp -rv'
+alias sucprvp='sudo cp -rvp'
 alias cd-='cd -'
 alias wgetf='wget -F'
 alias androidsdk='$SDK/tools/android &'
@@ -540,19 +588,22 @@ alias apt-up='sudo $APT update'
 alias apt-ug='sudo $APT upgrade'
 alias apt-find='apt-cache search'
 alias apt-info='apt-cache show'
-alias apt-code='sudo $APT source'
+alias apt-code='$APT source'
 alias aptin='sudo $APT install'
 alias aptrm='sudo $APT remove'
 alias aptup='sudo $APT update'
 alias aptug='sudo $APT upgrade'
 alias aptfind='apt-cache search'
+alias aptfin='apt-cache search'
 alias aptinfo='apt-cache show'
-alias aptcode='sudo $APT source'
+alias aptcode='$APT source'
+alias aptfiles='apt-file list'
 alias pacman='sudo pacman'
 alias pacman-sync='sudo pacman -S'
 alias pacman-list='sudo pacman -Ql'
 alias pacman-man='man pacman'
 alias qf='quick-find'
+alias qfd='quick-find-dir'
 alias ps='ps aux'
 
 
@@ -613,7 +664,7 @@ alias gotter='cd $ANDROID_BUILD_TOP/device/amazon/otter'
 alias inswifikey='a pu /android/apk/trevapps/RouterKeygen.dic /sdcard/ ; a ins /android/apk/trevapps/RouterKeygen.apk ; a wifikey ;'
 alias xclip-cwd='echo $PWD | xclip'
 alias www=x-www-browser
-alias display='gm display'
+#alias display='gm display'
 alias mkkerdevconfig='cd $(get_abs_build_var TARGET_KERNEL_SOURCE) && make-arm47 $(get_build_var TARGET_KERNEL_CONFIG) && make-arm47 menuconfig && cp -i .config $(get_abs_build_var TARGET_KERNEL_SOURCE)/arch/arm/configs/$(get_build_var TARGET_KERNEL_CONFIG)' 
 alias d2h='dec2hex'
 alias h2d='hex2dec'
@@ -637,6 +688,8 @@ alias gstdc='cd $ALIAS_BUILD_DIR/std-c-libs'
 alias README='less README'
 alias INSTALL='less INSTALL'
 alias conf='./configure'
+alias conf32='LDFLAGS='-m32' CFLAGS='-m32' ./configure'
+alias autog32='LDFLAGS='-m32' CFLAGS='-m32' ./autogen.sh'
 alias gbionic='cd $ANDROID_BUILD_TOP/bionic'
 alias gbioniclc='cd $ANDROID_BUILD_TOP/bionic/libc'
 alias gbioniclcarch='cd $ANDROID_BUILD_TOP/bionic/libc/arch-$TARGET_ARCH'
@@ -647,4 +700,13 @@ alias groomservice='$EDITOR $ANDROID_BUILD_TOP/.repo/local_manifests/roomservice
 alias rmroomservice='rm $ANDROID_BUILD_TOP/.repo/local_manifests/roomservice.xml'
 alias gmanifest='$EDITOR $ANDROID_BUILD_TOP/.repo/manifest.xml'
 alias mkdir='mkdir -pv'
+alias lsdown='ls $ALIAS_DOWNLOAD_DIR'
+
+alias filecd='file *'
+alias debcon='dpkg-deb --contents'
+alias debx='dpkg-deb --extract'
+alias debh='dpkg-deb --help'
+alias dpkgh='dpkg --help'
+
+
 
