@@ -216,6 +216,16 @@ function addalias(){
 
 
 }
+function go_external(){
+
+	EXTDIR=
+	if [ $# -ne 0 ] ; then
+		EXTDIR=/$1
+	fi 
+	cd $ANDROID_BUILD_TOP/external$EXTDIR
+
+}
+
 function elfless(){
     readelf -aW $1 | less
 }
@@ -248,7 +258,7 @@ DARWIN_PREFIX=i686-apple-darwin11
 
 
 function get_device_dir(){
-    ALIAS_DEVICE_DIR=$ANDROID_BUILD_TOP/device/*/$(echo "$TARGET_PRODUCT" | sed -ne 's/^[^_]*_//p')
+    ALIAS_DEVICE_DIR="$ANDROID_BUILD_TOP/device/*/$(echo "$TARGET_PRODUCT" | sed -ne 's/^[^_]*_//p')"
     
 }
 function get_kernel_dir(){
@@ -266,7 +276,7 @@ function get_kernel_dir(){
     
 }
 function get_device(){
-    ALIAS_DEVICE=$(echo "$TARGET_PRODUCT" | sed -ne 's/^[^_]*_//p')
+    ALIAS_DEVICE="$(echo "$TARGET_PRODUCT" | sed -ne 's/^[^_]*_//p')"
 }
 
 
@@ -322,6 +332,11 @@ alias gpoutkernel='cd $ANDROID_PRODUCT_OUT/obj/KERNEL_OBJ'
 alias gpoutobj='cd $ANDROID_PRODUCT_OUT/obj'
 alias gpoutobjlib='cd $ANDROID_PRODUCT_OUT/obj/lib'
 alias gpoututils='cd $ANDROID_PRODUCT_OUT/utilities'
+alias gpoutvendorlib='cd $ANDROID_PRODUCT_OUT/system/vendor/lib'
+alias gpoutvendorlibhw='cd $ANDROID_PRODUCT_OUT/system/vendor/lib/hw'
+alias gpoutvendorlibegl='cd $ANDROID_PRODUCT_OUT/system/vendor/lib/egl'
+alias gpoutvendorbin='cd $ANDROID_PRODUCT_OUT/system/vendor/bin'
+alias gpoutvendoretc='cd $ANDROID_PRODUCT_OUT/system/vendor/etc'
 alias gowinbin='cd $REPO_DIR/windows'
 alias goapk='cd $ALIAS_ANDROID_DIR/apk'
 alias gogits='cd $ALIAS_ANDROID_DIR/REPO/gits'
@@ -341,6 +356,7 @@ alias gpoutsyslibegl='cd $ANDROID_PRODUCT_OUT/system/lib/egl'
 alias gpoutsyslibmod='cd $ANDROID_PRODUCT_OUT/system/lib/modules'
 alias godown='cd $HOME/Downloads'
 alias gokernels='cd $KERNELS_DIR'
+alias golinuxkernel='cd $KERNELS_DIR/linux'
 alias goandroidkernels='cd $ANDROID_KERNELS_DIR'
 alias gho='cd $ANDROID_HOST_OUT'
 alias ghobin='cd $ANDROID_HOST_OUT/bin'
@@ -360,7 +376,7 @@ alias gfb='cd $ANDROID_BUILD_TOP/system/core/fastboot'
 alias gzlib='cd $ANDROID_BUILD_TOP/external/zlib'
 alias gssl='cd $ANDROID_BUILD_TOP/external/openssl'
 alias gbit='cd $ANDROID_BUILD_TOP/external/bootimage_utils'
-alias gext='cd $ANDROID_BUILD_TOP/external'
+alias gext='go_external'
 alias gsys='cd $ANDROID_BUILD_TOP/system'
 alias gsyscore='cd $ANDROID_BUILD_TOP/system/core'
 alias gsysextras='cd $ANDROID_BUILD_TOP/system/extras'
@@ -372,13 +388,14 @@ alias gdevelopment='cd $ANDROID_BUILD_TOP/development'
 
 alias gkernel='cd $ANDROID_BUILD_TOP/kernel'
 alias gkernelarchos='cd $ANDROID_BUILD_TOP/kernel/archos/archos_g9'
-alias gdeviceamazon='cd $ANDROID_BUILD_TOP/device/amazon'
-alias gdeviceamazonomap='cd $ANDROID_BUILD_TOP/device/amazon/omap4-common'
-alias gdeviceottercommon='cd $ANDROID_BUILD_TOP/device/amazon/otter-common'
-alias gdeviceotter='cd $ANDROID_BUILD_TOP/device/amazon/otter'
-alias gdevicearchos='cd $ANDROID_BUILD_TOP/device/archos'
-alias gdeviceomap='cd $ANDROID_BUILD_TOP/device/archos/omap4-common'
-alias gdeviceg9='cd $ANDROID_BUILD_TOP/device/archos/archos_g9'
+alias gdevamazon='cd $ANDROID_BUILD_TOP/device/amazon'
+alias gdevamazonomap='cd $ANDROID_BUILD_TOP/device/amazon/omap4-common'
+alias gdevottercommon='cd $ANDROID_BUILD_TOP/device/amazon/otter-common'
+alias gdevotter='cd $ANDROID_BUILD_TOP/device/amazon/otter'
+alias gdevotter2common='cd $ANDROID_BUILD_TOP/device/amazon/otter-common'
+alias gdevotter2='cd $ANDROID_BUILD_TOP/device/amazon/otter'
+alias gdevomap='cd $ANDROID_BUILD_TOP/device/archos/omap4-common'
+alias gdevg9='cd $ANDROID_BUILD_TOP/device/archos/archos_g9'
 alias gdevarchos='cd $ANDROID_BUILD_TOP/device/archos/archos_g9'
 alias gdevasusgrouper='cd $ANDROID_BUILD_TOP/device/asus/grouper'
 alias gdevasus='cd $ANDROID_BUILD_TOP/device/asus'
@@ -393,12 +410,16 @@ alias gbuild2='cd $ANDROID_BUILD_TOP/build2'
 alias gbuildcombo='cd $ANDROID_BUILD_TOP/build/core/combo'
 alias gbuildtools='cd $ANDROID_BUILD_TOP/build/tools'
 alias gbuildcore='cd $ANDROID_BUILD_TOP/build/core'
+alias gbuildcoretasks='cd $ANDROID_BUILD_TOP/build/core/tasks'
+alias gkerneltask='$EDITOR $ANDROID_BUILD_TOP/build/core/tasks/kernel.mk'
 alias gbuildboard='cd $ANDROID_BUILD_TOP/build/target/board'
 alias gbuildproduct='cd $ANDROID_BUILD_TOP/build/target/product'
 alias gbuildtarget='cd $ANDROID_BUILD_TOP/build/target'
 alias grootdir='cd $ANDROID_BUILD_TOP/system/core/rootdir'
 alias ghw='cd $ANDROID_BUILD_TOP/hardware'
 alias ghwti='cd $ANDROID_BUILD_TOP/hardware/ti'
+alias ghwtiomap4xxx='cd $ANDROID_BUILD_TOP/hardware/ti/omap4xxx'
+alias ghwtidomx='cd $ANDROID_BUILD_TOP/hardware/ti/domx'
 alias ghwril='cd $ANDROID_BUILD_TOP/hardware/ril'
 alias gti='cd $ANDROID_BUILD_TOP/device/ti'
 alias gtiblaze='cd $ANDROID_BUILD_TOP/device/ti/blaze_tablet'
@@ -480,6 +501,7 @@ function g8l(){
 	fi
 
 }
+
 function reset_paths(){
 env -u ANDROID_BUILD_PATHS > /dev/null
 env -u ANDROID_DEV_SCRIPTS  > /dev/null
@@ -505,7 +527,7 @@ env -u PATH  > /dev/null
 export PATH=/android/bin:/android/lib:/usr/local/bin:/usr/bin:/bin:/usr/games
 }
 
-
+alias gll='reset_paths && cd $ALIAS_BUILD_DIR/linaro-android && doenvsetup  && lunch'  
 alias gol='reset_paths && cd $ALIAS_BUILD_DIR/android-omapzoom && doenvsetup  && lunch'  
 alias rpsytrace='repo --trace sync -j16'
 alias rpsy='repo sync -j16'
@@ -514,6 +536,8 @@ alias rpinit-cm='repo init  -u git://github.com/CyanogenMod/android.git -b'
 alias rpinit-linaro='repo init -u git://android.git.linaro.org/platform/manifest.git -b'
 alias rpinit-aosp='repo init  -u https://android.googlesource.com/platform/manifest -b'
 alias rpinit-omap='repo init  -u git://git.omapzoom.org/platform/omapmanifest.git -b'
+alias rpinit-intel='repo init  -u https://android-review.01.org/platform/manifest -b'
+alias rpinit-x86='repo init  -u http://git.android-x86.org/platform/manifest -b'
 alias rpman='repo manifest'
 alias tm16='time m -j16'
 alias tm16log='time m -j16 showcommands &> build.log | tail -f build.log'
@@ -615,6 +639,7 @@ alias ..5="cd ../../../../.."
 alias fh='free -h'
 alias dfh='df -h'
 alias rmrf='rm -rf'
+alias make-x86='CROSS_COMPILE= ARCH=x86 make -j16'
 alias objdump-arm='$TOOLCHAINS_DIR/arm-eabi-4.7/bin/arm-eabi-objdump' 
 alias make-and='PATH=$ARM_EABI_TOOLCHAIN/arm-eabi-4.7/bin:$PATH  ARCH=arm SUBARCH=arm CROSS_COMPILE=arm-eabi- LOCALVERSION_AUTO=n make -j16'
 alias make-arm47='PATH=$TOOLCHAINS_DIR/arm-eabi-4.7/bin:$PATH  ARCH=arm SUBARCH=arm CROSS_COMPILE=arm-eabi- LOCALVERSION_AUTO=n make -j16'
@@ -632,7 +657,8 @@ alias lns='ln -s'
 
 alias updaterscript='$EDITOR META-INF/com/google/android/updater-script'
 alias ghome='cd $HOME'
-alias diffy='diff -W130 --suppress-common-lines  -y'
+alias diffy='colordiff -W130 --suppress-common-lines  -y'
+alias less='less -r'
 alias gstudio='cd /android/studio'
 alias gorandom='cd $ALIAS_BUILD_DIR/random_and_useful'
 alias xclip='xclip -selection c'
@@ -658,6 +684,7 @@ alias gvendorti='cd $ANDROID_BUILD_TOP/vendor/ti'
 alias gvendortmobile='cd $ANDROID_BUILD_TOP/vendor/tmobile'
 alias gvendorwidevine='cd $ANDROID_BUILD_TOP/vendor/widevine'
 alias gvendor='cd $ANDROID_BUILD_TOP/vendor/'
+alias gvendortrevd='cd $ANDROID_BUILD_TOP/vendor/trevd'
 
 
 alias gotter='cd $ANDROID_BUILD_TOP/device/amazon/otter' 
@@ -670,7 +697,7 @@ alias d2h='dec2hex'
 alias h2d='hex2dec'
 
 
-alias fgrep='echo Did you mean ag!!! && ag'
+
 alias fif='ag'
 
 alias gbsd='cd $ALIAS_BUILD_DIR/freebsd'
@@ -699,6 +726,7 @@ alias gbionicdl='cd $ANDROID_BUILD_TOP/bionic/libdl'
 alias groomservice='$EDITOR $ANDROID_BUILD_TOP/.repo/local_manifests/roomservice.xml'
 alias rmroomservice='rm $ANDROID_BUILD_TOP/.repo/local_manifests/roomservice.xml'
 alias gmanifest='$EDITOR $ANDROID_BUILD_TOP/.repo/manifest.xml'
+alias grepomanifest='cd $ANDROID_BUILD_TOP/.repo/manifests'
 alias mkdir='mkdir -pv'
 alias lsdown='ls $ALIAS_DOWNLOAD_DIR'
 
@@ -709,4 +737,6 @@ alias debh='dpkg-deb --help'
 alias dpkgh='dpkg --help'
 
 
-
+alias xv='xclip-pastefile'
+alias xx='xclip-cutfile'
+alias xc='xclip-copyfile'
