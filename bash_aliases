@@ -6,6 +6,7 @@ ALIAS_MUSIC_DIR=/REPO/music
 alias doset='source $HOME/.bash_aliases && $HOME/.bash_completion'
 shopt -s autocd
 ln -fs $ALIAS_DOWNLOAD_DIR $HOME/Downloads
+#stat --
 ln -fs $ALIAS_MUSIC_DIR $HOME/Music
 export TODIR=/android/build/random_and_useful/todir
 
@@ -26,7 +27,7 @@ function make_and_change_directory(){
 	cd $1
 
 }
-alias mdcd='make_and_change_directory'
+alias mkdircd='make_and_change_directory'
 
 # touch a file and make the path if required
 function make_directory_touch_file(){
@@ -56,7 +57,14 @@ function installtoolchain(){
     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/$GCC 20 --slave /usr/bin/g++ g++ /usr/bin/$GPP
     sudo update-alternatives --config gcc
 }
-
+function installlocaltoolchain(){
+    
+    GCC=$1
+    GPP=$(echo $GCC |sed 's/gcc/g++/g')
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/$GCC 20 --slave /usr/bin/g++ g++ /usr/bin/$GPP
+    sudo update-alternatives --config gcc
+}
+#export CC=/usr/bin/gcc
 #function touchngo(){
 
 	
@@ -289,7 +297,8 @@ REPO_DIR=/REPO
 GITS=$REPO_DIR/gits
 KERNELS_DIR=$ALIAS_BUILD_DIR/kernels
 ANDROID_KERNELS_DIR=$KERNELS_DIR/android
-EDITOR=gedit
+#EDITOR=gedit
+EDITOR=geany
 # --socket-file $G_FILE"
 NDK_TOOLCHAIN_VERSION=clang3.1
 export USE_CCACHE=1
@@ -325,6 +334,7 @@ alias gd='godir'
 #alias cd='pushd'
 #alias cd..='popd'
 alias du0='du -h --max-depth=0 -c'
+alias du1='du -h --max-depth=1 -c'
 alias start-eclipse='$ALIAS_ANDROID_DIR/eclipse/eclipse &'
 alias llt='ls -l --sort=time'
 alias gpout='cd $ANDROID_PRODUCT_OUT'
@@ -454,6 +464,7 @@ alias gdalvikvm='cd $ANDROID_BUILD_TOP/dalvik/vm'
 alias gdalvikvmnative='cd $ANDROID_BUILD_TOP/dalvik/vm/native'
 alias gdevicegrouper='cd $ANDROID_BUILD_TOP/device/asus/grouper'
 alias grepo='cd $ANDROID_BUILD_TOP/.repo'
+alias grepoprojects='cd $ANDROID_BUILD_TOP/.repo/projects'
 alias gpackages='cd $ANDROID_BUILD_TOP/packages'
 alias gapps='cd $ANDROID_BUILD_TOP/packages/apps'
 alias glocalmanifests='cd $ANDROID_BUILD_TOP/.repo/local_manifests'
@@ -467,14 +478,14 @@ alias gdev='get_device_dir && cd $ALIAS_DEVICE_DIR'
 alias gfullmk='get_device && get_device_dir && $EDITOR $ALIAS_DEVICE_DIR/full_$ALIAS_DEVICE.mk'
 alias gker='get_kernel_dir && cd $ALIAS_KERNEL_DIR'
 alias gkerconfig='$EDITOR $ALIAS_KERNEL_DIR/arch/$(get_build_var TARGET_ARCH)/configs/$(get_build_var TARGET_KERNEL_CONFIG)'
-
+alias README.md='less README.md'
 alias gpl='cd $ALIAS_BUILD_DIR/android-paranoid && doenvsetup && lunch'  
 alias gal='reset_paths && cd $ALIAS_BUILD_DIR/aosp && doenvsetup && lunch'
 alias gul='reset_paths && cd $ALIAS_BUILD_DIR/android-aurora && doenvsetup && lunch'
 alias gil='reset_paths && cd $ALIAS_BUILD_DIR/android-intel && doenvsetup && lunch'
 alias g6l='reset_paths && cd $ALIAS_BUILD_DIR/android-armv6 && doenvsetup && lunch'
-alias reposynclite='repo sync -j16 --no-tags --no-clone-bundle --current-branch'
-alias reposynclitetrace='repo --trace sync -j16 --no-tags --no-clone-bundle --current-branch'
+alias reposynclite='repo sync -j8 --no-tags --no-clone-bundle --current-branch'
+alias reposynclitetrace='repo --trace sync -j8 --no-tags --no-clone-bundle --current-branch'
 
 function g1l(){
     echo "ROM $1"
@@ -530,7 +541,8 @@ export PATH=/android/bin:/android/lib:/usr/local/bin:/usr/bin:/bin:/usr/games
 alias gll='reset_paths && cd $ALIAS_BUILD_DIR/linaro-android && doenvsetup  && lunch'  
 alias gol='reset_paths && cd $ALIAS_BUILD_DIR/android-omapzoom && doenvsetup  && lunch'  
 alias rpsytrace='repo --trace sync -j16'
-alias rpsy='repo sync -j16'
+alias rpsy='repo sync -j8'
+alias rpinit-omni='repo init -u git://github.com/omnirom/android.git -b'
 alias rpinit-pa='repo init -u git://github.com/ParanoidAndroid/manifest.git -b'
 alias rpinit-cm='repo init  -u git://github.com/CyanogenMod/android.git -b'
 alias rpinit-linaro='repo init -u git://android.git.linaro.org/platform/manifest.git -b'
@@ -581,6 +593,7 @@ alias 666='sudo chmod 666'
 alias 750='sudo chmod 750'
 alias rmrf='sudo rm -rf'
 alias cprv='cp -rv'
+alias cprvp='cp -rvp'
 alias sucprvp='sudo cp -rvp'
 alias cd-='cd -'
 alias wgetf='wget -F'
@@ -740,3 +753,13 @@ alias dpkgh='dpkg --help'
 alias xv='xclip-pastefile'
 alias xx='xclip-cutfile'
 alias xc='xclip-copyfile'
+
+alias gbuildmainmk="$EDITOR $ANDROID_BUILD_TOP/build/core/main.mk"
+alias gdbx="gdb -x $ALIAS_BUILD_DIR/random_and_useful/start_gdb" 
+
+alias goandroid="cd /android"
+alias gorepo="cd /REPO"
+alias gorepovbox="cd /REPO/vbox"
+alias stop='sudo stop'
+alias start='sudo start'
+alias restart='sudo restart'
