@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# This is a setup file for new systems 
+#
+
+SCRIPTS_DIR=/android/build/random_and_useful
+
+#
+# Time to take control of your machine and out
+# of the despotic grip of sudo, he is not your friend
+# he is the reason su does  work.  
+#
+# This modification has a security penalty attached
+# by assign the root user an actual password mean your
+# system can be access by root through a login shell
+#  
+# Don't worry the hackers aren't going to come for all 
+# your precious data - so get over yourself.
+#
+#sudo sh -c passwd
+#
+# Get your mount on! - 
+# WARNING : Info you don't Striking the mount pose 
+#           or adopting the mount poisition then there
+#           is a very real chance that this will fail
+#
+sudo cp $SCRIPTS_DIR/fstab /etc/fstab
+sudo mkdir /android
+sudo chown android:android /android
+sudo mkdir /vendor
+sudo chown android:android /vendor
+sudo mkdir /REPO
+sudo chown android:android /REPO
+sudo mount -a
+#ln -sf $SCRIPTS_DIR/openbox-autostart.sh $HOME/.config/openbox/autostart.sh 
+ln -sf $SCRIPTS_DIR/bash_aliases $HOME/.bash_aliases
+ln -sf $SCRIPTS_DIR/bash_completion $HOME/.bash_completion
+ln -sf $SCRIPTS_DIR/gitconfig $HOME/.gitconfig
+
+. $HOME/bash_aliases
+sudo apt-get update
+sudo apt-get --yes --force-yes upgrade
+#
+# The most important binary  you will ever need
+#
+sudo apt-get --yes --force-yes install sl
+#
+# 
+#
+sudo apt-get --yes --force-yes install gedit apt-file xclip xsel
+sudo apt-get --yes --force-yes install chromium-browser
+sudo apt-get --yes --force-yes install smbnetfs smbc smb2www samba system-config-samba fusesmb
+sudo apt-get --yes --force-yes install ssh nmap ethtool
+
+sudo apt-get --yes --force-yes install geany geany-common geany-plugin-addons geany-plugin-codenav geany-plugin-commander 
+sudo apt-get --yes --force-yes install geany-plugin-debugger geany-plugin-devhelp geany-plugin-doc geany-plugin-extrasel
+sudo apt-get --yes --force-yes install geany-plugin-gendoc geany-plugin-geniuspaste geany-plugin-gproject
+sudo apt-get --yes --force-yes install geany-plugin-insertnum geany-plugin-latex geany-plugin-lipsum geany-plugin-lua
+sudo apt-get --yes --force-yes install geany-plugin-macro geany-plugin-markdown geany-plugin-miniscript geany-plugin-multiterm 
+sudo apt-get --yes --force-yes install geany-plugin-numberedbookmarks geany-plugin-pg geany-plugin-prettyprinter geany-plugin-prj
+sudo apt-get --yes --force-yes install geany-plugin-scope geany-plugin-sendmail geany-plugin-shiftcolumn geany-plugin-spellcheck 
+sudo apt-get --yes --force-yes install geany-plugin-tableconvert geany-plugin-treebrowser geany-plugin-updatechecker geany-plugin-vc
+sudo apt-get --yes --force-yes install geany-plugin-webhelper geany-plugin-xmlsnippets geany-plugins geany-plugins-common 
