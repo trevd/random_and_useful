@@ -1,4 +1,4 @@
-#G_FILE=/run/shm/geany.$USER
+#copy#G_FILE=/run/shm/geany.$USER
 #G_FILE=/run/shm/geany.$USER
 ALIAS_DOWNLOAD_DIR=/REPO/Downloads
 ALIAS_MUSIC_DIR=/REPO/music
@@ -18,8 +18,19 @@ alias todir='to_dir'
 
 alias llp='ls -l ../'
 
+function _aptfind(){
 
+	apt-cache search $1	 | sort
+}
+function _aptfindless(){
 
+	apt-cache search $1	 | sort | less
+}
+function get_column(){
+
+	
+	cut -f$1 -d' '
+}
 # make directory ( including parents ) and cd to it
 function make_and_change_directory(){ 
 
@@ -114,29 +125,53 @@ dec2hex(){
   echo "obase=16; $@"|bc
 }
 
+function downloadvendorbinaries(){
+
+	
+	AOSP_DEVICE_NAME=$1
+	AOSP_BUILD_NUMBER=$2
+	GREP_FOR="https://dl.google.com.+$AOSP_DEVICE_NAME.+$AOSP_BUILD_NUMBER.+tgz"
+	if [ -z "$AOSP_BUILD_NUMBER" ] ; then 
+		curl --silent https://developers.google.com/android/nexus/drivers |  grep -o0 -E $GREP_FOR
+		return 0 ; 
+	fi	
+	SILENT=$3
+	if [ -z "$SILENT" ] ; then SILENT="--silent" ; fi
+	 
+	 
+	 echo "Grepping $GREP_FOR"
+	 rm extract-*-$1.sh ;
+	 rm extract-*-*.sh ; 
+	 rm $1*.tgz ;
+	 rm *-$1-*.tgz ;
+	 rm *-$1-*.sh.tgz ;
+	 curl $SILENT https://developers.google.com/android/nexus/drivers |  grep -o0 -E $GREP_FOR | \
+		while read -r line ;
+			do 
+				FILESH=`curl $SILENT $line | tar -xvz ` ;
+				sed -n '/\x1f\x8b/,$ p' $FILESH | tar zxv ;
+			done 
+
+}
+
 function copyvendor(){
 
     cd $ANDROID_BUILD_TOP
     lunch $1
     ALIAS_BUILD=$(basename `get_abs_build_var BUILD_ID`) ; ALIAS_BUILD_ID="${x%?}" 
+    echo "ALIAS_BUILD=$ALIAS_BUILD"
     ALIAS_DEVICE=$(get_abs_build_var TARGET_PRODUCT | sed -ne 's/^[^_]*_//p')
+    echo "ALIAS_DEVICE=$ALIAS_DEVICE"
     cd $ANDROID_BUILD_TOP
+    echo "ANDROID _BUILD_TOP=$ANDROID _BUILD_TOP"
     mkdir -p $ANDROID_BUILD_TOP/vendor
     echo "copying vendor files for device: $ALIAS_DEVICE build: $ALIAS_BUILD_ID"
     rm -f extract*.sh
-    
-    for fi in `find /android/build/android-nexus-binaries/$ALIAS_DEVICE -iname "*$ALIAS_DEVICE*$ALIAS_BUILD_ID*.tgz" -exec tar zxvf {} \;`
-    do
-         echo " extracting `basename $fi` "
-         sed -n '/\x1f\x8b/,$ p' $fi > $fi.tgz
-         tar xfz $fi.tgz 
-    done
-    rm -f $ANDROID_BUILD_TOP/extract-*-*.sh
-    rm -f $ANDROID_BUILD_TOP/extract-*-*.sh.tgz 
-    
-    
-    
-    
+   
+    #done
+    #rm -f $ANDROID_BUILD_TOP/extract-*-*.sh
+    #rm -f $ANDROID_BUILD_TOP/extract-*-*.sh.tgz 
+      
 
 }
 alias cpven='copyvendor'
@@ -627,11 +662,13 @@ alias apt-find='apt-cache search'
 alias apt-info='apt-cache show'
 alias apt-code='$APT source'
 alias aptin='sudo $APT install'
+alias aptinsug='sudo $APT --install-suggests install'
 alias aptrm='sudo $APT remove'
 alias aptup='sudo $APT update'
 alias aptug='sudo $APT upgrade'
-alias aptfind='apt-cache search'
-alias aptfin='apt-cache search'
+alias aptfind='_aptfind'
+alias aptfin='aptfind'
+alias aptfinless='_aptfindless'
 alias aptinfo='apt-cache show'
 alias aptcode='$APT source'
 alias aptfiles='apt-file list'
@@ -748,7 +785,7 @@ alias debcon='dpkg-deb --contents'
 alias debx='dpkg-deb --extract'
 alias debh='dpkg-deb --help'
 alias dpkgh='dpkg --help'
-
+alias rm='rm -v'
 
 alias xv='xclip-pastefile'
 alias xx='xclip-cutfile'
@@ -763,3 +800,5 @@ alias gorepovbox="cd /REPO/vbox"
 alias stop='sudo stop'
 alias start='sudo start'
 alias restart='sudo restart'
+alias getcol='get_column'
+alias gbuildandroidinfo='cd $ALIAS_BUILD_DIR/android-info'
