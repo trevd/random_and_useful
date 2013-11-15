@@ -5,6 +5,9 @@ ALIAS_MUSIC_DIR=/REPO/music
 
 alias doset='source $HOME/.bash_aliases && $HOME/.bash_completion'
 shopt -s autocd
+rm $HOME/Downloads > /dev/null
+rm $HOME/Music > /dev/null
+
 ln -fs $ALIAS_DOWNLOAD_DIR $HOME/Downloads
 #stat --
 ln -fs $ALIAS_MUSIC_DIR $HOME/Music
@@ -17,6 +20,16 @@ fi
 alias todir='to_dir'
 
 alias llp='ls -l ../'
+function _aptcode(){
+
+	own /tmp/apt-fast.list
+	apt-get source $1
+	rm $1*diff.gz
+	rm $1*ubuntu*.dsc
+	rm $1*.orig.tar.*
+	rm $1*.debian.tar.*
+}
+
 
 function _aptfind(){
 
@@ -25,6 +38,11 @@ function _aptfind(){
 function _aptfindless(){
 
 	apt-cache search $1	 | sort | less
+}
+function make_symlink(){
+
+	sudo ln -s $PWD/$1 $2
+
 }
 function get_column(){
 
@@ -64,7 +82,7 @@ function installtoolchain(){
     
     GCC=$1
     GPP=$(echo $GCC |sed 's/gcc/g++/g')
-    sudo apt-get -y --force-yes install $GCC $GPP
+    sudo $APT -y --force-yes install $GCC $GPP
     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/$GCC 20 --slave /usr/bin/g++ g++ /usr/bin/$GPP
     sudo update-alternatives --config gcc
 }
@@ -259,13 +277,15 @@ function addalias(){
 
 
 }
-function go_external(){
+function go_dir(){
 
-	EXTDIR=
+	
+	
 	if [ $# -ne 0 ] ; then
-		EXTDIR=/$1
+		EXTDIR=/$2
 	fi 
-	cd $ANDROID_BUILD_TOP/external$EXTDIR
+ 
+	cd $ANDROID_BUILD_TOP/$1/$EXTDIR
 
 }
 
@@ -339,7 +359,7 @@ NDK_TOOLCHAIN_VERSION=clang3.1
 export USE_CCACHE=1
 export CCACHE_DIR=$ALIAS_BUILD_DIR/ccache
 
-APT=apt-get
+APT=apt-fast
 alias striplic="sed -n '/\x1f\x8b/,$ p'"
 alias gnexbin='cd $ALIAS_BUILD_DIR/android-nexus-binaries'
 alias mnt='sudo mount'
@@ -354,14 +374,14 @@ alias binl=binless
 alias binf=bingrep
 alias setapp='update-alternative'
 alias setgcc='sudo update-alternatives --config gcc'
-alias setjava='sudo update-alternatives --config java && sudo update-alternatives --config javac'
+alias setjava='sudo update-alternatives --config java && sudo update-alternatives --config javac && sudo update-alternatives --config javadoc'
 alias addapp='sudo update-alternatives --install'
 ENVSETUP=doenvsetup
 export SDK=$ALIAS_ANDROID_DIR/sdk
 export ANDROID_SDK=$ALIAS_ANDROID_DIR/sdk
 export ANDROID_HOME=$SDK
-export NDK=/android/ndk/android-ndk-r8e
-PATH=/android/bin:/android/lib:$ANDROID_SDK/platform-tools:$ANDROID_SDK/tools:/android/build/toolchains/arm-linux-androideabi-4.7/bin:$PATH
+export NDK=/android/ndk/current
+PATH=/android/build/git-pastiche/bin:/android/bin:/android/lib:$ANDROID_SDK/platform-tools:$ANDROID_SDK/tools:/android/build/toolchains/arm-linux-androideabi-4.7/bin:$PATH
 alias gh-commit='git commit -a && git push'
 alias gh-push='git push'
 alias c='cat'
@@ -421,62 +441,63 @@ alias gfb='cd $ANDROID_BUILD_TOP/system/core/fastboot'
 alias gzlib='cd $ANDROID_BUILD_TOP/external/zlib'
 alias gssl='cd $ANDROID_BUILD_TOP/external/openssl'
 alias gbit='cd $ANDROID_BUILD_TOP/external/bootimage_utils'
-alias gext='go_external'
-alias gsys='cd $ANDROID_BUILD_TOP/system'
-alias gsyscore='cd $ANDROID_BUILD_TOP/system/core'
-alias gsysextras='cd $ANDROID_BUILD_TOP/system/extras'
+alias gext='go_dir external'
+alias gsys='go_dir system'
+alias gsyscore='go_dir system/core'
+alias gsysextras='go_dir system/extras'
 alias gsysbluetooth='cd $ANDROID_BUILD_TOP/system/bluetooth'
 alias gsyscoreroot='cd $ANDROID_BUILD_TOP/system/core/rootdir'
 alias gsysroot='cd $ANDROID_BUILD_TOP/system/core/rootdir'
-alias grecovery='cd $ANDROID_BUILD_TOP/bootable/recovery'
-alias gdevelopment='cd $ANDROID_BUILD_TOP/development'
+alias grecovery='go_dir bootable/recovery'
+alias gdevelopment='go_dir development'
 
-alias gkernel='cd $ANDROID_BUILD_TOP/kernel'
-alias gkernelarchos='cd $ANDROID_BUILD_TOP/kernel/archos/archos_g9'
-alias gdevamazon='cd $ANDROID_BUILD_TOP/device/amazon'
-alias gdevamazonomap='cd $ANDROID_BUILD_TOP/device/amazon/omap4-common'
-alias gdevottercommon='cd $ANDROID_BUILD_TOP/device/amazon/otter-common'
-alias gdevotter='cd $ANDROID_BUILD_TOP/device/amazon/otter'
-alias gdevotter2common='cd $ANDROID_BUILD_TOP/device/amazon/otter-common'
-alias gdevotter2='cd $ANDROID_BUILD_TOP/device/amazon/otter'
-alias gdevomap='cd $ANDROID_BUILD_TOP/device/archos/omap4-common'
-alias gdevg9='cd $ANDROID_BUILD_TOP/device/archos/archos_g9'
-alias gdevarchos='cd $ANDROID_BUILD_TOP/device/archos/archos_g9'
-alias gdevasusgrouper='cd $ANDROID_BUILD_TOP/device/asus/grouper'
-alias gdevasus='cd $ANDROID_BUILD_TOP/device/asus'
-alias gdevsamsung='cd $ANDROID_BUILD_TOP/device/samsung'
-alias gdevsamsungomap='cd $ANDROID_BUILD_TOP/device/samsung/omap4-common'
-alias gdevp1='cd $ANDROID_BUILD_TOP/device/samsung/p1'
-alias gdevp1common='cd $ANDROID_BUILD_TOP/device/samsung/p1-common'
-alias gdevblazetab='cd $ANDROID_BUILD_TOP/device/ti/blaze_tablet'
-alias gdevice='cd $ANDROID_BUILD_TOP/device'
-alias gbuild='cd $ANDROID_BUILD_TOP/build'
-alias gbuild2='cd $ANDROID_BUILD_TOP/build2'
-alias gbuildcombo='cd $ANDROID_BUILD_TOP/build/core/combo'
-alias gbuildtools='cd $ANDROID_BUILD_TOP/build/tools'
-alias gbuildcore='cd $ANDROID_BUILD_TOP/build/core'
-alias gbuildcoretasks='cd $ANDROID_BUILD_TOP/build/core/tasks'
+alias gkernel='go_dir kernel'
+alias gkernelarchos='go_dir kernel/archos/archos_g9'
+alias gdevamazon='go_dir device/amazon'
+alias gdevamazonomap='go_dir device/amazon/omap4-common'
+alias gdevottercommon='go_dir device/amazon/otter-common'
+alias gdevotter='go_dir device/amazon/otter'
+alias gdevotter2common='go_dir device/amazon/otter-common'
+alias gdevotter2='go_dir device/amazon/otter'
+alias gdevomap='go_dir device/archos/omap4-common'
+alias gdevg9='go_dir device/archos/archos_g9'
+alias gdevarchos='go_dir device/archos/archos_g9'
+alias gdevasusgrouper='go_dir device/asus/grouper'
+alias gdevasus='go_dir device/asus'
+alias gdevsamsung='go_dir device/samsung'
+alias gdevsamsungomap='go_dir device/samsung/omap4-common'
+alias gdevp1='go_dir device/samsung/p1'
+alias gdevp1common='go_dir device/samsung/p1-common'
+alias gdevblazetab='go_dir device/ti/blaze_tablet'
+alias gdevice='go_dir device'
+alias gbuild='go_dir build'
+alias gbuild2='go_dir build2'
+alias gbuildcombo='go_dir build/core/combo'
+alias gbuildtools='go_dir build/tools'
+alias gbuildcore='go_dir build/core'
+alias gbuildcoretasks='go_dir build/core/tasks'
 alias gkerneltask='$EDITOR $ANDROID_BUILD_TOP/build/core/tasks/kernel.mk'
-alias gbuildboard='cd $ANDROID_BUILD_TOP/build/target/board'
-alias gbuildproduct='cd $ANDROID_BUILD_TOP/build/target/product'
-alias gbuildtarget='cd $ANDROID_BUILD_TOP/build/target'
-alias grootdir='cd $ANDROID_BUILD_TOP/system/core/rootdir'
-alias ghw='cd $ANDROID_BUILD_TOP/hardware'
-alias ghwti='cd $ANDROID_BUILD_TOP/hardware/ti'
-alias ghwtiomap4xxx='cd $ANDROID_BUILD_TOP/hardware/ti/omap4xxx'
-alias ghwtidomx='cd $ANDROID_BUILD_TOP/hardware/ti/domx'
-alias ghwril='cd $ANDROID_BUILD_TOP/hardware/ril'
-alias gti='cd $ANDROID_BUILD_TOP/device/ti'
-alias gtiblaze='cd $ANDROID_BUILD_TOP/device/ti/blaze_tablet'
-alias gsam='cd $ANDROID_BUILD_TOP/device/samsung'
-alias ghtc='cd $ANDROID_BUILD_TOP/device/htc'
-alias gbionic='cd $ANDROID_BUILD_TOP/bionic'
-alias gprebuilts='cd $ANDROID_BUILD_TOP/prebuilts'
-alias glibc='cd $ANDROID_BUILD_TOP/bionic/libc'
-alias glibc86='cd $ANDROID_BUILD_TOP/bionic/libc/arch-x86'
-alias glibc64='cd $ANDROID_BUILD_TOP/bionic/libc/arch-x86_64'
-alias glibc86bionic='cd $ANDROID_BUILD_TOP/bionic/libc/arch-x86/bionic'
-alias glibc64bionic='cd $ANDROID_BUILD_TOP/bionic/libc/arch-x86_64/bionic'
+alias gbuildboard='go_dir build/target/board'
+alias gbuildproduct='go_dir build/target/product'
+alias gbuildtarget='go_dir build/target'
+alias grootdir='go_dir system/core/rootdir'
+alias ghw='go_dir hardware'
+alias ghwti='go_dir hardware/ti'
+alias ghwbc='go_dir hardware/broadcom'
+alias ghwtiomap4xxx='go_dir hardware/ti/omap4xxx'
+alias ghwtidomx='go_dir hardware/ti/domx'
+alias ghwril='go_dir hardware/ril'
+alias gti='go_dir device/ti'
+alias gtiblaze='go_dir device/ti/blaze_tablet'
+alias gsam='go_dir device/samsung'
+alias ghtc='go_dir device/htc'
+alias gbionic='go_dir bionic'
+alias gprebuilts='go_dir prebuilts'
+alias glibc='go_dir bionic/libc'
+alias glibc86='go_dir bionic/libc/arch-x86'
+alias glibc64='go_dir bionic/libc/arch-x86_64'
+alias glibc86bionic='go_dir bionic/libc/arch-x86/bionic'
+alias glibc64bionic='go_dir bionic/libc/arch-x86_64/bionic'
 alias llibc86='ll $ANDROID_BUILD_TOP/bionic/libc/arch-x86'
 alias llibc64='ll $ANDROID_BUILD_TOP/bionic/libc/arch-x86_64'
 alias llibc86bionic='ll $ANDROID_BUILD_TOP/bionic/libc/arch-x86/bionic'
@@ -662,6 +683,7 @@ alias apt-find='apt-cache search'
 alias apt-info='apt-cache show'
 alias apt-code='$APT source'
 alias aptin='sudo $APT install'
+alias aptrein='sudo $APT --reinstall install'
 alias aptinsug='sudo $APT --install-suggests install'
 alias aptrm='sudo $APT remove'
 alias aptup='sudo $APT update'
@@ -670,8 +692,9 @@ alias aptfind='_aptfind'
 alias aptfin='aptfind'
 alias aptfinless='_aptfindless'
 alias aptinfo='apt-cache show'
-alias aptcode='$APT source'
+alias aptcode='_aptcode'
 alias aptfiles='apt-file list'
+alias aptdl='apt-get download'
 alias pacman='sudo pacman'
 alias pacman-sync='sudo pacman -S'
 alias pacman-list='sudo pacman -Ql'
@@ -691,7 +714,7 @@ alias dfh='df -h'
 alias rmrf='rm -rf'
 alias make-x86='CROSS_COMPILE= ARCH=x86 make -j16'
 alias objdump-arm='$TOOLCHAINS_DIR/arm-eabi-4.7/bin/arm-eabi-objdump' 
-alias make-and='PATH=$ARM_EABI_TOOLCHAIN/arm-eabi-4.7/bin:$PATH  ARCH=arm SUBARCH=arm CROSS_COMPILE=arm-eabi- LOCALVERSION_AUTO=n make -j16'
+alias make-and='ARCH=arm SUBARCH=arm CROSS_COMPILE=arm-linux-gnueabi- LOCALVERSION_AUTO=n make -j16'
 alias make-arm47='PATH=$TOOLCHAINS_DIR/arm-eabi-4.7/bin:$PATH  ARCH=arm SUBARCH=arm CROSS_COMPILE=arm-eabi- LOCALVERSION_AUTO=n make -j16'
 alias make-archos='PATH=$TOOLCHAINS_DIR/archos_arm_toolchain/usr/bin:$PATH CC=arm-linux-uclibcgnueabi-cc ARCH=arm SUBARCH=arm CROSS_COMPILE=arm-linux-uclibcgnueabi- LOCALVERSION_AUTO=n make -j16'
 alias make-arm43='PATH=$TOOLCHAINS_DIR/arm-eabi-4.3.3/bin:$PATH  ARCH=arm SUBARCH=arm CROSS_COMPILE=arm-eabi- LOCALVERSION_AUTO=n make'
@@ -765,6 +788,7 @@ alias gstdc='cd $ALIAS_BUILD_DIR/std-c-libs'
 alias README='less README'
 alias INSTALL='less INSTALL'
 alias conf='./configure'
+alias configure-help='./configure --help'
 alias conf32='LDFLAGS='-m32' CFLAGS='-m32' ./configure'
 alias autog32='LDFLAGS='-m32' CFLAGS='-m32' ./autogen.sh'
 alias gbionic='cd $ANDROID_BUILD_TOP/bionic'
@@ -779,7 +803,7 @@ alias gmanifest='$EDITOR $ANDROID_BUILD_TOP/.repo/manifest.xml'
 alias grepomanifest='cd $ANDROID_BUILD_TOP/.repo/manifests'
 alias mkdir='mkdir -pv'
 alias lsdown='ls $ALIAS_DOWNLOAD_DIR'
-
+alias symlink='make_symlink'
 alias filecd='file *'
 alias debcon='dpkg-deb --contents'
 alias debx='dpkg-deb --extract'
@@ -802,3 +826,5 @@ alias start='sudo start'
 alias restart='sudo restart'
 alias getcol='get_column'
 alias gbuildandroidinfo='cd $ALIAS_BUILD_DIR/android-info'
+alias updategrub='sudo update-grub2'
+alias qemu-start='qemu-system-x86_64 -cpu qemu64 -m 2G -serial stdio -smp 4 -initrd'
