@@ -38,6 +38,7 @@ ln -sf $SCRIPTS_DIR/bash_completion $HOME/.bash_completion
 ln -sf $SCRIPTS_DIR/gitconfig $HOME/.gitconfig
 
 . $HOME/bash_aliases
+sudo sh -c "echo  \"deb [ arch=amd64 ] http://ppa.launchpad.net/apt-fast/stable/ubuntu saucy main\" > /etc/apt/sources.list.d/webupd8team-aptfast-saucy.list"
 sudo apt-get update
 sudo apt-get --yes --force-yes upgrade
 #
@@ -47,7 +48,14 @@ sudo apt-get --yes --force-yes install sl
 #
 # 
 #
-sudo apt-get --yes --force-yes install gedit apt-file xclip xsel
+sudo apt-get --purge remove libzeitgeist-2.0-0 zeitgeist-core zeitgeist-datahub zeitgeist blueman xscreensaver
+
+sudo rm /etc/xdg/autostart/zeitgeist-datahub.desktop 
+sudo rm /etc/xdg/autostart/xscreensaver.desktop 
+sudo rm /etc/xdg/autostart/blueman.desktop
+sudo rm /etc/xdg/autostart/update-notifier.desktop
+
+sudo apt-get --yes --force-yes install apt-file xclip xsel binwalk ghex apt-fast
 sudo apt-get --yes --force-yes install chromium-browser
 sudo apt-get --yes --force-yes install smbnetfs smbc smb2www samba system-config-samba fusesmb
 sudo apt-get --yes --force-yes install ssh nmap ethtool
@@ -61,3 +69,5 @@ sudo apt-get --yes --force-yes install geany-plugin-numberedbookmarks geany-plug
 sudo apt-get --yes --force-yes install geany-plugin-scope geany-plugin-sendmail geany-plugin-shiftcolumn geany-plugin-spellcheck 
 sudo apt-get --yes --force-yes install geany-plugin-tableconvert geany-plugin-treebrowser geany-plugin-updatechecker geany-plugin-vc
 sudo apt-get --yes --force-yes install geany-plugin-webhelper geany-plugin-xmlsnippets geany-plugins geany-plugins-common 
+
+sudo dpkg-reconfigure apt-fast

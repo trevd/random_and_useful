@@ -281,7 +281,7 @@ function go_dir(){
 		EXTDIR=/$2
 	fi 
  
-	cd $ANDROID_BUILD_TOP/$1/$EXTDIR
+	cd $1$EXTDIR
 
 }
 function go_android_dir(){
@@ -415,34 +415,34 @@ alias du0='du -h --max-depth=0 -c'
 alias du1='du -h --max-depth=1 -c'
 alias start-eclipse='$ALIAS_ANDROID_DIR/eclipse/eclipse &'
 alias llt='ls -l --sort=time'
-alias gpout='cd $ANDROID_PRODUCT_OUT'
-alias gpoutsyspriv='cd $ANDROID_PRODUCT_OUT/system/priv-app'
-alias gpoutkernel='cd $ANDROID_PRODUCT_OUT/obj/KERNEL_OBJ'
-alias gpoutobj='cd $ANDROID_PRODUCT_OUT/obj'
-alias gpoutobjlib='cd $ANDROID_PRODUCT_OUT/obj/lib'
-alias gpoututils='cd $ANDROID_PRODUCT_OUT/utilities'
-alias gpoutvendorlib='cd $ANDROID_PRODUCT_OUT/system/vendor/lib'
-alias gpoutvendorlibhw='cd $ANDROID_PRODUCT_OUT/system/vendor/lib/hw'
-alias gpoutvendorlibegl='cd $ANDROID_PRODUCT_OUT/system/vendor/lib/egl'
-alias gpoutvendorbin='cd $ANDROID_PRODUCT_OUT/system/vendor/bin'
-alias gpoutvendoretc='cd $ANDROID_PRODUCT_OUT/system/vendor/etc'
+alias gpout='go_dir $ANDROID_PRODUCT_OUT'
+alias gpoutsyspriv='go_dir $ANDROID_PRODUCT_OUT/system/priv-app'
+alias gpoutkernel='go_dir $ANDROID_PRODUCT_OUT/obj/KERNEL_OBJ'
+alias gpoutobj='go_dir $ANDROID_PRODUCT_OUT/obj'
+alias gpoutobjlib='go_dir $ANDROID_PRODUCT_OUT/obj/lib'
+alias gpoututils='go_dir $ANDROID_PRODUCT_OUT/utilities'
+alias gpoutvendorlib='go_dir $ANDROID_PRODUCT_OUT/system/vendor/lib'
+alias gpoutvendorlibhw='go_dir $ANDROID_PRODUCT_OUT/system/vendor/lib/hw'
+alias gpoutvendorlibegl='go_dir $ANDROID_PRODUCT_OUT/system/vendor/lib/egl'
+alias gpoutvendorbin='go_dir $ANDROID_PRODUCT_OUT/system/vendor/bin'
+alias gpoutvendoretc='go_dir $ANDROID_PRODUCT_OUT/system/vendor/etc'
 alias gowinbin='cd $REPO_DIR/windows'
 alias goapk='cd $ALIAS_ANDROID_DIR/apk'
 alias gogits='cd $ALIAS_ANDROID_DIR/REPO/gits'
 alias gomusic='cd $REPO_DIR/music'
-alias gpoutsys='cd $ANDROID_PRODUCT_OUT/system'
-alias gpoutsysbin='cd $ANDROID_PRODUCT_OUT/system/bin'
-alias gpoutsysxbin='cd $ANDROID_PRODUCT_OUT/system/xbin'
-alias gpoutsysetc='cd $ANDROID_PRODUCT_OUT/system/etc'
-alias gpoutsysapp='cd $ANDROID_PRODUCT_OUT/system/app'
-alias gpoutsyslib='cd $ANDROID_PRODUCT_OUT/system/lib'
-alias gpoutroot='cd $ANDROID_PRODUCT_OUT/root'
-alias gpoutrecovery='cd $ANDROID_PRODUCT_OUT/recovery/root'
-alias gpoutrootsbin='cd $ANDROID_PRODUCT_OUT/root/sbin'
+alias gpoutsys='go_dir $ANDROID_PRODUCT_OUT/system'
+alias gpoutsysbin='go_dir $ANDROID_PRODUCT_OUT/system/bin'
+alias gpoutsysxbin='go_dir $ANDROID_PRODUCT_OUT/system/xbin'
+alias gpoutsysetc='go_dir $ANDROID_PRODUCT_OUT/system/etc'
+alias gpoutsysapp='go_dir $ANDROID_PRODUCT_OUT/system/app'
+alias gpoutsyslib='go_dir $ANDROID_PRODUCT_OUT/system/lib'
+alias gpoutroot='go_dir $ANDROID_PRODUCT_OUT/root'
+alias gpoutrecovery='go_dir $ANDROID_PRODUCT_OUT/recovery/root'
+alias gpoutrootsbin='go_dir $ANDROID_PRODUCT_OUT/root/sbin'
 alias gpoutrecoverysbin='cd $ANDROID_PRODUCT_OUT/recovery/root/sbin'
-alias gpoutsyslibhw='cd $ANDROID_PRODUCT_OUT/system/lib/hw'
-alias gpoutsyslibegl='cd $ANDROID_PRODUCT_OUT/system/lib/egl'
-alias gpoutsyslibmod='cd $ANDROID_PRODUCT_OUT/system/lib/modules'
+alias gpoutsyslibhw='go_dir $ANDROID_PRODUCT_OUT/system/lib/hw'
+alias gpoutsyslibegl='go_dir $ANDROID_PRODUCT_OUT/system/lib/egl'
+alias gpoutsyslibmod='go_dir $ANDROID_PRODUCT_OUT/system/lib/modules'
 alias godown='cd $HOME/Downloads'
 alias gokernels='cd $KERNELS_DIR'
 alias golinuxkernel='cd $KERNELS_DIR/linux'
@@ -451,32 +451,39 @@ alias gho='cd $ANDROID_HOST_OUT'
 alias ghobin='cd $ANDROID_HOST_OUT/bin'
 alias gholib='cd $ANDROID_HOST_OUT/lib'
 alias ghoobj='cd $ANDROID_HOST_OUT/obj'
-alias ghowin='cd $ANDROID_BUILD_TOP/out/host/windows-x86'
-alias ghowinbin='cd $ANDROID_BUILD_TOP/out/host/windows-x86/bin'
-alias ghowinlib='cd $ANDROID_BUILD_TOP/out/host/windows-x86/lib'
-alias gholin='cd $ANDROID_BUILD_TOP/out/host/linux-x86'
+alias ghowin='go_android_dir out/host/windows-x86'
+alias ghowinbin='go_android_dir out/host/windows-x86/bin'
+alias ghowinlib='go_android_dir out/host/windows-x86/lib'
+alias gholin='go_android_dir out/host/linux-x86'
 
-alias ghodar='cd $ANDROID_BUILD_TOP/out/host/darwin-x86'
+alias ghodar='go_android_dir out/host/darwin-x86'
 alias mm16='mm -j16'
 
 alias gbt='cd $ANDROID_BUILD_TOP'
-alias gadb='cd $ANDROID_BUILD_TOP/system/core/adb'
-alias gfb='cd $ANDROID_BUILD_TOP/system/core/fastboot'
-alias gzlib='cd $ANDROID_BUILD_TOP/external/zlib'
-alias gssl='cd $ANDROID_BUILD_TOP/external/openssl'
-alias gbit='cd $ANDROID_BUILD_TOP/external/bootimage_utils'
-alias gext='go_dir external'
-alias gsys='go_dir system'
-alias gsyscore='go_dir system/core'
-alias gsysextras='go_dir system/extras'
-alias gsysbluetooth='cd $ANDROID_BUILD_TOP/system/bluetooth'
-alias gsyscoreroot='cd $ANDROID_BUILD_TOP/system/core/rootdir'
-alias gsysroot='cd $ANDROID_BUILD_TOP/system/core/rootdir'
-alias grecovery='go_dir bootable/recovery'
-alias gdevelopment='go_dir development'
+alias gadb='go_android_dir system/core/adb'
+alias gfb='go_android_dir system/core/fastboot'
+alias gzlib='go_android_dir external/zlib'
+alias gssl='go_android_dir external/openssl'
+alias gbit='go_android_dir external/bootimage_utils'
+alias gext='go_android_dir external'
+alias gsys='go_android_dir system'
+alias gsyscore='go_android_dir system/core'
+alias gsyscoreinc='go_android_dir system/core/include'
+alias gsysextras='go_android_dir system/extras'
+alias gsysmedia='go_android_dir system/media'
+alias gsyssecurity='go_android_dir system/security'
+alias gsysnetd='go_android_dir system/netd'
+alias gsysvold='go_android_dir system/vold'
+alias gsysbluetooth='go_android_dir system/bluetooth'
+alias gsyscoreroot='go_android_dir system/core/rootdir'
+
+alias grecovery='go_android_dir bootable/recovery'
+alias gbootable='go_android_dir bootable'
+alias gdevelopment='go_android_dir development'
 
 alias gkernel='go_android_dir kernel'
 alias gkernelarchos='go_android_dir kernel/archos/archos_g9'
+alias gdevice='go_android_dir device'
 alias gdamazon='go_android_dir device/amazon'
 alias gdamazonomap='go_android_dir device/amazon/omap4-common'
 alias gdottercommon='go_android_dir device/amazon/otter-common'
@@ -515,6 +522,7 @@ alias ghwarchos='go_android_dir hardware/archos'
 alias ghwti='go_android_dir hardware/ti'
 alias ghwbc='go_android_dir hardware/broadcom'
 alias ghwtiomap4xxx='go_android_dir hardware/ti/omap4xxx'
+alias ghwtiomap4archos='go_android_dir hardware/ti/omap4xxx-archos'
 alias ghwtidomx='go_android_dir hardware/ti/domx'
 alias ghwril='go_android_dir hardware/ril'
 alias gti='go_android_dir device/ti'
@@ -547,6 +555,7 @@ alias gfw='go_android_dir frameworks'
 alias gfwbase='go_android_dir frameworks/base'
 alias gfwbasecore='go_android_dir frameworks/base/core'
 alias gfwnative='go_android_dir frameworks/native'
+alias gfwav='go_android_dir frameworks/av'
 alias gfwnativeservices='go_android_dir frameworks/native/services'
 alias gdalvik='go_android_dir dalvik'
 alias gdalvikvm='go_android_dir dalvik/vm'
@@ -554,7 +563,11 @@ alias gdalvikvmnative='go_android_dir dalvik/vm/native'
 alias grepo='go_android_dir .repo'
 alias grepoprojects='go_android_dir .repo/projects'
 alias gpackages='go_android_dir packages'
+alias gpackagesapps='go_android_dir packages/apps'
 alias gapps='go_android_dir packages/apps'
+alias gpackagesproviders='go_android_dir packages/providers'
+alias gpackagesservices='go_android_dir packages/services'
+alias gpackagesinput='go_android_dir packages/inputmethods'
 alias glocalmanifests='go_android_dir .repo/local_manifests'
 alias groomservice='$EDITOR $ANDROID_BUILD_TOP/.repo/local_manifests/roomservice.xml'
 alias gboardconfigmk='get_device_dir && $EDITOR $ALIAS_DEVICE_DIR/BoardConfig.mk'
@@ -654,13 +667,14 @@ alias tlj='tar -jtvf'
 
 ########## Quick Switch Common Directories ##################
 alias gobuild='go_build_dir'
-alias gotc='cd $TOOLCHAINS_DIR'
-alias gows='cd $WORKSPACE_DIR'
-alias gowsacm10='cd $WORKSPACE_DIR/archos/cm101'
-alias godroid='cd $ALIAS_ANDROID_DIR'
+alias gotc='go_dir $TOOLCHAINS_DIR'
+alias gows='go_dir $WORKSPACE_DIR'
+alias gowsacm10='go_dir $WORKSPACE_DIR/archos/cm101'
+alias godroid='go_dir $ALIAS_ANDROID_DIR'
+alias godocs='go_dir $ALIAS_ANDROID_DIR/docs'
 alias govendor='go_vendor_dir'
-alias gosdk='cd $SDK'
-alias gondk='cd $NDK'
+alias gosdk='go_dir $SDK'
+alias gondk='go_dir $NDK'
 ################# ANDROID BUILD HELPERS #######################
 ##### root required ########
 alias reboot='sudo reboot'
@@ -774,27 +788,27 @@ alias govendorsamsungp1='go_vendor_dir samsung/p1000'
 alias govendorarchos='go_vendor_dir archos'
 alias govendoramazon='go_vendor_dir amazon'
 alias govendorasus='go_vendor_dir asus'
-alias gvendorbroadcomm='go_dir vendor/broadcomm'
-alias gvendorcm='go_dir vendor/cm'
-alias gvendoromni='go_dir vendor/omni'
-alias gvendorasus='go_dir vendor/asus'
-alias gvendorcmconfig='go_dir vendor/cm/config'
-alias gvendorelan='go_dir vendor/elan/config'
-alias gvendorgoogle='go_dir vendor/google'
-alias gvendorinvensense='go_dir vendor/invensense'
-alias gvendormoto='go_dir vendor/moto'
-alias gvendornvida='go_dir vendor/nvida'
-alias gvendornxp='go_dir vendor/nxp'
-alias gvendorqcom='go_dir vendor/qcom'
-alias gvendorsamsung='go_dir vendor/samsung'
-alias gvendorsony='go_dir vendor/sony'
-alias gvendorti='go_dir vendor/ti'
-alias gvendorimgtec='go_dir vendor/imgtec'
-alias gvendorarchos='go_dir vendor/archos'
-alias gvendortmobile='go_dir vendor/tmobile'
-alias gvendorwidevine='go_dir vendor/widevine'
-alias gvendor='go_dir vendor/'
-alias gvendortrevd='go_dir vendor/trevd'
+alias gvendorbroadcomm='go_vendor_dir vendor/broadcomm'
+alias gvendorcm='go_android_dir vendor/cm'
+alias gvendoromni='go_android_dir vendor/omni'
+alias gvendorasus='go_android_dir vendor/asus'
+alias gvendorcmconfig='go_android_dir vendor/cm/config'
+alias gvendorelan='go_android_dir vendor/elan/config'
+alias gvendorgoogle='go_android_dir vendor/google'
+alias gvendorinvensense='go_android_dir vendor/invensense'
+alias gvendormoto='go_android_dir vendor/moto'
+alias gvendornvida='go_android_dir vendor/nvida'
+alias gvendornxp='go_android_dir vendor/nxp'
+alias gvendorqcom='go_android_dir vendor/qcom'
+alias gvendorsamsung='go_android_dir vendor/samsung'
+alias gvendorsony='go_android_dir vendor/sony'
+alias gvendorti='go_android_dir vendor/ti'
+alias gvendorimgtec='go_android_dir vendor/imgtec'
+alias gvendorarchos='go_android_dir vendor/archos'
+alias gvendortmobile='go_android_dir vendor/tmobile'
+alias gvendorwidevine='go_android_dir vendor/widevine'
+alias gvendor='go_android_dir vendor/'
+alias gvendortrevd='go_android_dir vendor/trevd'
 
 
 alias gotter='cd $ANDROID_BUILD_TOP/device/amazon/otter' 
@@ -828,6 +842,8 @@ alias conf='./configure'
 alias configure-help='./configure --help'
 alias conf32='LDFLAGS='-m32' CFLAGS='-m32' ./configure'
 alias autog32='LDFLAGS='-m32' CFLAGS='-m32' ./autogen.sh'
+alias gout='cd $ANDROID_BUILD_TOP/out'
+alias gouttarget='cd $ANDROID_BUILD_TOP/out/target'
 alias gbionic='cd $ANDROID_BUILD_TOP/bionic'
 alias gbioniclc='cd $ANDROID_BUILD_TOP/bionic/libc'
 alias gbioniclcarch='cd $ANDROID_BUILD_TOP/bionic/libc/arch-$TARGET_ARCH'
@@ -836,7 +852,7 @@ alias gbioniclcktools='cd $ANDROID_BUILD_TOP/bionic/libc/kernel/tools'
 alias gbionicdl='cd $ANDROID_BUILD_TOP/bionic/libdl'
 alias groomservice='$EDITOR $ANDROID_BUILD_TOP/.repo/local_manifests/roomservice.xml'
 alias rmroomservice='rm $ANDROID_BUILD_TOP/.repo/local_manifests/roomservice.xml'
-alias gmanifest='$EDITOR $ANDROID_BUILD_TOP/.repo/manifest.xml'
+alias gmanifestxml='$EDITOR $ANDROID_BUILD_TOP/.repo/manifest.xml'
 alias grepomanifest='cd $ANDROID_BUILD_TOP/.repo/manifests'
 alias mkdir='mkdir -pv'
 alias lsdown='ls $ALIAS_DOWNLOAD_DIR'
@@ -881,16 +897,39 @@ function import_nexus_binaries(){
 	find $NEXUS_BINARY_DIRECTORY -iname "*$1*$2" -exec tar -xzvf {} \; && find $PWD -maxdepth 1 -iname "extract-*-$1.sh" -exec sh -c "rm {}.tgz ;  sed -n '/\x1f\x8b/,$ p' {} > {}.tgz && tar xvzf {}.tgz ; rm {} {}.tgz" \; 
 }
 
+# some archos lazyness 
+function kdflashpushdata(){
 
+	  
+    adb push kernel /data/local/k && \
+    adb push ramdisk.img /data/local/i && \
+    adb shell kd_flasher -k /data/local/k -i /data/local/i
+	
+}
 # some archos lazyness 
 function kdflashpush(){
 
-	adb remount / && \
-	adb push kernel /k && \
-	adb push ramdisk.img /i && \
-	adb shell kd_flasher -k k -i i
+	a remountall / && \
+    adb shell mkdir /mnt/rawfs && \
+    adb shell mount -trawfs -orw /dev/block/mmcblk0p1 /mnt/rawfs && \
+    adb push kernel /k && \
+    adb push ramdisk.img /i && \
+    adb shell kd_flasher -k k -i i
 	
 }
 alias kdflash='adb shell kd_flasher -k k -i i'
 
 alias mmwin='USE_MINGW=true mm'
+
+function patchdir(){
+
+	# $1 original 
+	# $2 new
+   mkdir -p `dirname  /tmp/$1.git`
+   mkdir -p `dirname /tmp/$2.git`
+	mv $1/.git /tmp/$1.git
+	mv $2/.git /tmp/$2.git
+	diff -ruN $1/ $2/ > $3.patch
+	
+
+}
